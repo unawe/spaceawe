@@ -2,7 +2,7 @@ from django.contrib import admin
 from django import forms
 from parler.admin import TranslatableAdmin, TranslatableModelForm
 
-from .models import Interview, InterviewQuestion, Career, Webinar, TeachingMaterial, TeachingMaterialAttachment
+from .models import Interview, InterviewQuestion, Career, Webinar, TeachingMaterial, TeachingMaterialAttachment, Booklet
 
 
 class InterviewQuestionInlineAdmin(admin.TabularInline):
@@ -148,6 +148,25 @@ class TeachingMaterialAdmin(TranslatableAdmin):
 
     inlines = (
         TeachingMaterialAttachmentInline,
+    )
+
+    def get_prepopulated_fields(self, request, obj=None):
+        return {
+            'slug': ('title',),
+        }
+
+
+@admin.register(Booklet)
+class BookletAdmin(TranslatableAdmin):
+    list_display = ('title', 'all_languages_column', )
+
+    fieldsets = (
+        (None,
+         {'fields': ('title', 'slug', 'teaser', 'booklet', 'cover', ), }),
+        ('Publishing',
+         {'fields': (('release_date', ), ('published', 'featured', ),), }),
+        (None,
+         {'fields': ('story', ), }),
     )
 
     def get_prepopulated_fields(self, request, obj=None):

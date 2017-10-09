@@ -61,6 +61,8 @@ if settings.DEBUG:
     # serve MEDIA_ROOT (uploaded files) in development
     from django.conf.urls.static import static
     import debug_toolbar
+
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
     urlpatterns += [

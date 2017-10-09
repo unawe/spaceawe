@@ -12,7 +12,7 @@ from django.utils.translation import get_language
 from django.http import Http404
 
 from spaceawe import misc
-from .models import Interview, Career, Webinar, TeachingMaterial, TeachingMaterialAttachment
+from .models import Interview, Career, Webinar, TeachingMaterial, TeachingMaterialAttachment, Booklet
 
 
 class CareersViewList(ViewUrlMixin, TemplateView):
@@ -49,6 +49,9 @@ class CareersViewList(ViewUrlMixin, TemplateView):
         queryset = self.filter_category(queryset).exclude(published=False).exclude(release_date__gte=datetime.today())
         return queryset
 
+    def get_booklets_queryset(self):
+        return Booklet.objects.all().exclude(published=False).exclude(release_date__gte=datetime.today()).last()
+
     def get_view_url(self):
         if 'category' in self.kwargs:
             return reverse('careers:list_by_category', kwargs={'category': self.kwargs['category']})
@@ -75,6 +78,7 @@ class CareersViewList(ViewUrlMixin, TemplateView):
         context['careers'] = self.get_careers_queryset()
         context['webinars'] = self.get_webinars_queryset()
         context['teaching_materials'] = self.get_teaching_materials_queryset()
+        context['booklet'] =  self.get_booklets_queryset()
         if 'category' in self.kwargs:
             context['category'] = self.kwargs['category']
         else:

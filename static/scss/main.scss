@@ -1065,6 +1065,7 @@ div.assessments {
 		width: 100%;
 		background-position: center;
 		background-size: cover;
+
 	}
 
 	.content-container {
@@ -1836,6 +1837,35 @@ a:focus {
 	opacity: 1;
 }
 
+
+#booklet {
+	letter-spacing: 1px;
+	text-align: center;
+	img.booklet-cover {
+		text-align: center;
+	}
+	#booklet-extra {
+		display: none;
+		text-align: left;
+	}
+	p {
+		width:100%;
+	}
+	#sp-show-more {
+		cursor: hand;
+		color: #585858;
+	}
+	#close-icon {
+		-webkit-transform : rotate(45deg);
+        -moz-transform : rotate(45deg);
+        -ms-transform : rotate(45deg);
+        transform : rotate(45deg);
+	}
+
+	.close-button {
+		text-align: right;
+	}
+}
 
 /*search*/
 .search_wrapper .content-container > .row > div {
