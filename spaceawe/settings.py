@@ -461,7 +461,7 @@ SPACESCOOP_DOWNLOADS = {
 
 if DJANGO_SETTINGS_CONFIG == 'DEV':
     # TIME_ZONE = 'Europe/Lisbon'
-    STATIC_ROOT = '/tmp'
+    #STATIC_ROOT = '/tmp'
     TEMPLATES[0]['OPTIONS']['debug'] = True  # TEMPLATE_DEBUG
     # debug toolbar
     DEBUG_TOOLBAR_PATCH_SETTINGS = False
@@ -480,12 +480,28 @@ if DJANGO_SETTINGS_CONFIG == 'DEV':
 
     THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.dbm_kvstore.KVStore'  # in-memory sorl KV store
     THUMBNAIL_DUMMY = True
+    THUMBNAIL_DEBUG = True
     # THUMBNAIL_DUMMY_SOURCE = 'http://placekitten.com/%(width)s/%(height)s'
     # THUMBNAIL_DUMMY_RATIO = 1.5
 
     WHOOSH_INDEX_PATH = os.path.join(PARENT_DIR, 'usr/whoosh_index/spaceawe')
     # CELERY_ALWAYS_EAGER = True  # Tasks are run synchronously
 
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+                },
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['console'],
+                'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            },
+        },
+    }
 elif DJANGO_SETTINGS_CONFIG == 'PROD':
     pass
 
