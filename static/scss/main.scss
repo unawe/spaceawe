@@ -1065,6 +1065,7 @@ div.assessments {
 		width: 100%;
 		background-position: center;
 		background-size: cover;
+
 	}
 
 	.content-container {
@@ -1837,6 +1838,42 @@ a:focus {
 }
 
 
+#booklet {
+	letter-spacing: 1px;
+	text-align: center;
+	img.booklet-cover {
+		text-align: center;
+	}
+	#booklet-extra {
+		display: none;
+		text-align: left;
+	}
+	p {
+		width:100%;
+	}
+	#sp-show-more {
+		cursor: hand;
+		color: #585858;
+	}
+	#close-icon {
+		-webkit-transform : rotate(45deg);
+        -moz-transform : rotate(45deg);
+        -ms-transform : rotate(45deg);
+        transform : rotate(45deg);
+	}
+
+	.close-button {
+		text-align: right;
+	}
+
+	.download-booklet {
+		margin-top:20px;
+		margin-bottom:20px;
+		heigth:30px;
+	}
+
+}
+
 /*search*/
 .search_wrapper .content-container > .row > div {
 	padding: 0 $padding;
@@ -2568,4 +2605,47 @@ div.search a:hover {
 .contest-content .more-button:hover {
 	background-color: map-get($section-background-colors, 'games');
 	border-color: map-get($section-background-colors, 'games');
+}
+
+
+.journey-title {
+	@include bigtext();
+	text-transform: uppercase;
+	color: map-get($section-background-colors, 'activities');
+}
+.journey-description{
+	@include normaltext();
+	text-align: justify;
+}
+.journey-chapter-title {
+	@include heading();
+	padding-top: 50px;
+	padding-bottom: 10px;
+	color: map-get($section-background-colors, 'activities');
+}
+.journey-chapter-description {
+	@include normaltext();
+	text-align: justify;
+	padding-bottom: 10px;
+}
+.journey-chapter-activities-title {
+	@include heading();
+	color: white;
+	padding:10px;
+}
+.journey-activities{
+	background-color:lightgrey;
+	.row {
+		text-align: initial;
+		padding: 5px;
+
+		.activity {
+			font-weight: bold;
+		}
+	}
+}
+
+.journey-header {
+	width:100%;
+	background-color: map-get($section-background-colors, 'activities');
 }

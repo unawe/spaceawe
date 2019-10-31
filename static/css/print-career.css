@@ -42,7 +42,8 @@ body {
     font-family: "Miso", sans-serif;
     font-size: 32px;
     font-weight: bold;
-    text-transform: uppercase; }
+    text-transform: uppercase;
+    color: #9d59e4; }
   #header .subtitle {
     margin-top: 1em;
     font-style: italic; }
@@ -94,27 +95,6 @@ body {
 #story .section-caption:lang(ro) {
   font-family: "BloggerSans", "BPreplay", sans-serif; }
 
-/* activities */
-.activity-color {
-  color: #9d59e4; }
-
-/* careers */
-.career-color {
-  color: #4ed8c3; }
-
-.bolder {
-  font-weight: bolder; }
-
-.image-container {
-  min-height: 400px;
-  width: 100%;
-  background-position: center;
-  background-size: cover; }
-
-@page :first {
-  .logosmall {
-    visibility: hidden; } }
-
 #sponsors img {
   height: 40px;
   padding-right: 20pt; }
@@ -143,4 +123,4 @@ body {
 .text {
   line-height: 1.4; }
 
-/*# sourceMappingURL=print-activities.css.map */
+/*# sourceMappingURL=print-career.css.map */

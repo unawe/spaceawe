@@ -21,8 +21,6 @@ from search.mixins import SearchModel
 
 import logging
 
-logger = logging.getLogger('spaceawe')
-
 
 class CareerQuerySet(TranslatableQuerySet):
     pass
@@ -69,12 +67,10 @@ class Career(TranslatableModel, PublishingModel, SpaceaweModel, SearchModel):
         return os.path.join(settings.MEDIA_ROOT, self.media_key(), 'download', self.download_key() + '.' + resource)
 
     def attachment_url(self, filename):
-        logger.info('dej mi url %s' % filename)
         if filename.startswith('http') or filename.startswith('/'):
             result = filename
         else:
             result = os.path.join(settings.MEDIA_URL, 'activities/attach', self.uuid, filename)
-        logger.info(result)
         return result
 
     def download_key(self):
@@ -116,7 +112,7 @@ class InterviewManager(PublishingManager, TranslatableManager):
 
 
 class Interview(TranslatableModel, PublishingModel, SpaceaweModel, SearchModel):
-    video_url = models.URLField(max_length=255)
+    video_url = models.URLField(max_length=255, null=True, blank=True)
     cover = ImageField(null=True, blank=True, upload_to='interviews')
     _languages = SelectMultipleField(max_length=9999, choices=global_settings.LANGUAGES, db_column='languages')
     career = models.ManyToManyField(Career)
@@ -361,3 +357,59 @@ def get_file_path_step(instance, filename):
 class TeachingMaterialAttachment(BaseAttachmentModel):
     hostmodel = models.ForeignKey(TeachingMaterial, related_name='attachments')
     file = models.FileField(null=True, blank=True, upload_to=get_file_path_step)
+
+
+class BookletQuerySet(TranslatableQuerySet):
+    pass
+
+
+class BookletManager(PublishingManager, TranslatableManager):
+    queryset_class = BookletQuerySet
+
+
+class Booklet(TranslatableModel, PublishingModel):
+    _languages = SelectMultipleField(max_length=9999, choices=global_settings.LANGUAGES, db_column='languages')
+    objects = BookletManager()
+
+    @property
+    def main_visual(self):
+        return self.cover.file if self.cover else None
+
+    def __str__(self):
+        return self.title
+
+    def pdf_url(self):
+        return self.download_url('pdf')
+
+    def download_url(self, resource):
+        return os.path.join(settings.MEDIA_URL, self.media_key(), 'download', self.download_key() + '.' + resource)
+
+    def download_path(self, resource):
+        return os.path.join(settings.MEDIA_ROOT, self.media_key(), 'download', self.download_key() + '.' + resource)
+
+    def download_key(self):
+        return self.slug + '-booklet-' + str(self.pk)
+
+    @classmethod
+    def media_key(cls):
+        return str(cls._meta.verbose_name_plural)
+
+    class Meta:
+        ordering = ['release_date']
+
+
+class BookletTranslation(TranslatedFieldsModel):
+    master = models.ForeignKey(Booklet, related_name='translations', null=True)
+    title = models.CharField(max_length=255, blank=True)
+    slug = models.SlugField(max_length=255, blank=True)
+    teaser = models.CharField(max_length=255, blank=True)
+    story = RichTextField(blank=True, null=True, config_name='default')
+    booklet = models.FileField(null=False, blank=False, upload_to='booklets/files')
+    cover = ImageField(null=True, blank=True, upload_to='booklets/covers')
+
+    class Meta:
+        unique_together = (
+            ('language_code', 'master'),
+            ('language_code', 'title'),
+            ('language_code', 'slug'),
+        )

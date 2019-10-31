@@ -74,19 +74,14 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.redirects',
-
     'pipeline',
-
     'parler',
     'ckeditor',
     'taggit',
     'taggit_autosuggest',
     'el_pagination',
-
     'sorl.thumbnail',
-
     'django_mistune',
-
     'django_ext',
     'smartpages',
     'institutions',
@@ -99,7 +94,8 @@ INSTALLED_APPS = (
     'develop',
     'careers',
     'search',
-    'contests'
+    'contests',
+    'downloads'
     # 'spaceawe.apps.SpaceScoopConfig',
     # 'spaceawe.search',
 
@@ -335,6 +331,7 @@ THUMBNAIL_ALIASES = {
     'list_thumb': '380x250',
     'spread': '1024',
     'filter_image': '96x96',
+    'carrer_image': '1250x550'
 }
 
 # CK editor
@@ -461,7 +458,7 @@ SPACESCOOP_DOWNLOADS = {
 
 if DJANGO_SETTINGS_CONFIG == 'DEV':
     # TIME_ZONE = 'Europe/Lisbon'
-    STATIC_ROOT = '/tmp'
+    #STATIC_ROOT = '/tmp'
     TEMPLATES[0]['OPTIONS']['debug'] = True  # TEMPLATE_DEBUG
     # debug toolbar
     DEBUG_TOOLBAR_PATCH_SETTINGS = False
@@ -478,14 +475,35 @@ if DJANGO_SETTINGS_CONFIG == 'DEV':
     }
     EMAIL_SUBJECT_PREFIX = '[spaceawe dev] '
 
-    THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.dbm_kvstore.KVStore'  # in-memory sorl KV store
+    THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db_kvstore.KVStore'  # in-memory sorl KV store
     THUMBNAIL_DUMMY = True
+    THUMBNAIL_DEBUG = True
     # THUMBNAIL_DUMMY_SOURCE = 'http://placekitten.com/%(width)s/%(height)s'
     # THUMBNAIL_DUMMY_RATIO = 1.5
 
     WHOOSH_INDEX_PATH = os.path.join(PARENT_DIR, 'usr/whoosh_index/spaceawe')
     # CELERY_ALWAYS_EAGER = True  # Tasks are run synchronously
 
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+                },
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['console'],
+                'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            },
+        },
+    }
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
 elif DJANGO_SETTINGS_CONFIG == 'PROD':
     pass
 

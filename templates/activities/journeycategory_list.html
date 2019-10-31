@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load staticfiles thumbnail smartpages i18n %}
+
+{% block site_title %}{% trans SECTIONS.activities.title %} | Space Awareness {% endblock %}
+
+{% block extra_body_class %}section-activities{% endblock %}
+
+{% block slogan %}
+<div class="slogan subtitle">{{ SECTIONS.activities.title }}</div>
+<div class="slogan">{{ SECTIONS.activities.subtitle }}</div>
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div id="cover" class="">
+        <div class="feature-container">
+            <div class="fake-padding"></div>
+            <div class="cycle-slideshow">
+    {% for activity in activities|slice:":4" %}
+        {% thumbnail activity.main_visual THUMBNAIL_ALIASES.spread crop="center" as im %}
+                <div class="feature" style="background-image: url({% static 'img/line_pattern_04.png' %}),  url({{ im.url }}) ;">
+                    <a href="{% url 'activities:detail' code=activity.code slug=activity.slug %}">
+                        <div class="title-container"><div class="title-subcontainer">
+                            <div class="title">{{ activity.title }}</div>
+                            <div class="subtitle">{{ activity.teaser }}</div>
+                        </div></div>
+                    </a>
+                </div>
+        {% endthumbnail %}
+    {% endfor %}
+            </div>
+			<nav class="arrow-pagedown-container"><a class="arrow-pagedown" href="#main"><img src="{% static 'img/buttons/arrow_down_white.svg' %}"></a></nav>
+        </div>
+    </div>
+    
+    <div class="thumbnailed-list activities page2 snap pure-g">
+    	<div id="main" class="anchor"></div>
+
+        <div class="pure-u-1 text-content smartembed">
+            {% smartembed 'section-activities-intro' %}
+        </div>
+
+        <div class="pure-u-1 list-header">
+            <div id="filters" class="anchor"></div>
+            <div class="title">{% trans "Sort by category" %}</div>
+            <div class="filters">
+                <div class="filter-topic-text"><a class="selected" href="/activities/#filters">{% trans "all" %}</a></div>
+            </div>
+            {% include "filters.html" with page_name_filter="activities:list_by_category" %}
+        </div>
+
+        <div class="pure-u-1 list-header">
+            <div class="journey-title">{{ journey.title | upper }}</div>
+            <div class="journey-description">{{ journey.description }}</div>
+
+            {% for chapter in chapters %}
+                <div class="journey-chapter-title">
+                    {%  trans "Chapter" %} {{ forloop.counter }} - {{ chapter.title }}
+                </div>
+                <div class="pure-u-1 journey-chapter-description">
+                    {{ chapter.description }}
+                </div>
+
+                <div class="journey-activities">
+                    <div class="journey-header">
+                        <div class="journey-chapter-activities-title">{%  trans "Activities" as title1 %} {% trans "Chapter" as title2 %} {{ title1|upper }} {{ title2|upper }}{{ forloop.counter }}</div>
+                    </div>
+                    {%  for activity in chapter.activities.all %}
+                        <div class="row">
+                            <span class="activity">{%  trans "Activities" %}{{ forloop.parentloop.counter }}.{{ forloop.counter }}: </span>
+                            <a href="{% url 'activities:detail' code=activity.code slug=activity.slug %}">{{ activity.title }}</a>
+                        </div>
+                    {%  endfor %}
+                </div>
+            {%  endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

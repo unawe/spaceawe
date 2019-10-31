@@ -2,7 +2,7 @@ from django.contrib import admin
 from django import forms
 from parler.admin import TranslatableAdmin, TranslatableModelForm
 
-from .models import Interview, InterviewQuestion, Career, Webinar, TeachingMaterial, TeachingMaterialAttachment
+from .models import Interview, InterviewQuestion, Career, Webinar, TeachingMaterial, TeachingMaterialAttachment, Booklet
 
 
 class InterviewQuestionInlineAdmin(admin.TabularInline):
@@ -13,6 +13,17 @@ class InterviewQuestionInlineAdmin(admin.TabularInline):
 
 class InterviewAdminForm(TranslatableModelForm):
 
+    def clean(self):
+        cleaned_data = super().clean()
+
+        video_url = cleaned_data.get('video_url', None)
+        cover = cleaned_data.get('cover', None)
+
+        if not video_url and not cover:
+            raise forms.ValidationError(
+                "Please fill video URL or cover image."
+            )
+
     class Meta:
         model = Interview
         fields = ('title', 'slug', 'release_date', 'published', 'featured', 'cover', 'teaser', 'story', 'career',
@@ -22,7 +33,7 @@ class InterviewAdminForm(TranslatableModelForm):
 @admin.register(Interview)
 class InterviewAdmin(TranslatableAdmin):
     list_display = ('title', 'all_languages_column', )
-
+    form = InterviewAdminForm
     fieldsets = (
         (None,
          {'fields': ('title', 'slug', 'teaser', 'cover', 'video_url', ), }),
@@ -148,6 +159,25 @@ class TeachingMaterialAdmin(TranslatableAdmin):
 
     inlines = (
         TeachingMaterialAttachmentInline,
+    )
+
+    def get_prepopulated_fields(self, request, obj=None):
+        return {
+            'slug': ('title',),
+        }
+
+
+@admin.register(Booklet)
+class BookletAdmin(TranslatableAdmin):
+    list_display = ('title', 'all_languages_column', )
+
+    fieldsets = (
+        (None,
+         {'fields': ('title', 'slug', 'teaser', 'booklet', 'cover', ), }),
+        ('Publishing',
+         {'fields': (('release_date', ), ('published', 'featured', ),), }),
+        (None,
+         {'fields': ('story', ), }),
     )
 
     def get_prepopulated_fields(self, request, obj=None):

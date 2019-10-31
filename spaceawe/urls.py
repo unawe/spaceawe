@@ -24,7 +24,6 @@ from .views import TranslatableTemplateView
 from develop.views import DevelopView
 from search.views import simple_search
 
-
 urlpatterns = [
 #    url(r'^admin/', include(admin.site.urls)),
     # url(r'^ckeditor/', include('ckeditor.urls')),
@@ -53,7 +52,7 @@ urlpatterns += i18n_patterns(
     url(r'^competition$', LatestCompetitionView.as_view(), name='latest-competition'),
     url(r'^competition/', include('contests.urls', namespace='contests')),
     url(r'^search/', include('search.urls', namespace='search')),
-
+    url(r'^download/', include('downloads.urls', namespace='downloads')),
 
 )
 
@@ -61,6 +60,8 @@ if settings.DEBUG:
     # serve MEDIA_ROOT (uploaded files) in development
     from django.conf.urls.static import static
     import debug_toolbar
+
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
     urlpatterns += [

@@ -38,10 +38,12 @@
 					<img id="facebook" class="button" data-url="{{ SITE_URL }}{% url 'games:detail' slug=object.slug %}" src="{% static 'img/icons/social/icon_sm_facebook_b.svg' %}" />
 					<img id="twitter" class="button" data-url="{{ SITE_URL }}{% url 'games:detail' slug=object.slug %}" src="{% static 'img/icons/social/icon_sm_twitter_b.svg' %}" />
 				</div>
+                {% if object.links_list %}
 				<div>
 					<div class="caption">{% trans "go to the activity" %}</div>
 					<div class="value">{% for link in object.links_list %}<a href="{{ link.url }}">{{ link.caption }}</a> {% endfor %}</div>
 				</div>
+                {% endif %}
 				<div>
 					<div class="caption">{% trans "difficulty level" %}</div>
 					<div class="value">{{ object.difficulty }}</div>

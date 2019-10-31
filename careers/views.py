@@ -1,18 +1,18 @@
+import os
+
 from django.http import HttpResponse
-from django.template import loader
-from django.views.generic import ListView, DetailView, View, TemplateView
+from django.views.generic import DetailView, TemplateView
 from django.core.urlresolvers import reverse
 from parler.views import ViewUrlMixin, TranslatableSlugMixin
 from django.utils.timezone import datetime
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 
 from django.conf import settings
 from django_ext import compiler
 from django.utils.translation import get_language
 from django.http import Http404
-
 from spaceawe import misc
-from .models import Interview, Career, Webinar, TeachingMaterial, TeachingMaterialAttachment
+from .models import Interview, Career, Webinar, TeachingMaterial, TeachingMaterialAttachment, Booklet
 
 
 class CareersViewList(ViewUrlMixin, TemplateView):
@@ -49,6 +49,9 @@ class CareersViewList(ViewUrlMixin, TemplateView):
         queryset = self.filter_category(queryset).exclude(published=False).exclude(release_date__gte=datetime.today())
         return queryset
 
+    def get_booklets_queryset(self):
+        return Booklet.objects.available().last()
+
     def get_view_url(self):
         if 'category' in self.kwargs:
             return reverse('careers:list_by_category', kwargs={'category': self.kwargs['category']})
@@ -75,6 +78,7 @@ class CareersViewList(ViewUrlMixin, TemplateView):
         context['careers'] = self.get_careers_queryset()
         context['webinars'] = self.get_webinars_queryset()
         context['teaching_materials'] = self.get_teaching_materials_queryset()
+        context['booklet'] = self.get_booklets_queryset()
         if 'category' in self.kwargs:
             context['category'] = self.kwargs['category']
         else:
@@ -170,3 +174,16 @@ class TeachingMaterialDetailsView(ViewUrlMixin, TranslatableSlugMixin, DetailVie
         context['categories'] = [v['title'] for v in self.object.spaceawe_categories]
         context['attachments'] = self.get_attachment_queryset()
         return context
+
+
+class BookletDetailView(DetailView):
+    def post(self, request, *args, **kwargs):
+        language = request.POST.get('item_language')
+        slug = kwargs.get('slug')
+        obj = get_object_or_404(Booklet, translations__slug=slug)
+        obj.set_current_language(language)
+
+        with open(obj.booklet.path, 'rb') as booklet_file:
+            response = HttpResponse(booklet_file.read(), content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment;filename=%s' % os.path.basename(obj.booklet.name)
+            return response

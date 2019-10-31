@@ -111,11 +111,21 @@ class GameTranslation(TranslatedFieldsModel):
         # verbose_name = 'game translation'
 
 
-class GameLink(models.Model):
+class GameLink(TranslatableModel):
     game = models.ForeignKey(Game, related_name='links')
-    name = models.CharField(max_length=255, blank=True)
     url = models.URLField(max_length=255, verbose_name='URL')
 
     @property
     def caption(self):
-        return self.name if self.name else self.url
+        try:
+            caption = self.name
+        except GameLink.DoesNotExist:
+            caption = self.url
+
+        return caption
+
+class GameLinkTranslation(TranslatedFieldsModel):
+    master = models.ForeignKey(GameLink, related_name='translations', null=True)
+    name = models.CharField(max_length=255, blank=True)
+
+

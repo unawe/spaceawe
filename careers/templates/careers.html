@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-{% load staticfiles thumbnail smartpages i18n%}
-
+{% load staticfiles thumbnail smartpages i18n static %}
+{% load available_languages %}
 {% block extra_body_class %}section-careers{% endblock %}
 
 {% block slogan %}
@@ -13,68 +13,101 @@
 
 {% block content %}
 
-	<div id="cover">
-	  <div class="feature-container">
-		<div class="fake-padding"></div>
-		<div class="feature" style="background-image: url(/static/img/line_pattern_04.png), url(/static/img/cover/earth.jpg);">
-		  <div class="title-container">
-		<div class="title-subcontainer">
-		  <div class="title">
-			  Understand the opportunities in space exploration and the career potential it offers.
-		  </div>
-		</div>
-		  </div>
-		</div>
-		<nav class="arrow-pagedown-container"><a class="arrow-pagedown" href="#main"><img src="/static/img/buttons/arrow_down_white.svg"></a></nav>
-	  </div>
-	</div>
-	<div class="thumbnailed-list careers page2 snap pure-g smartembed">
+<div id="cover">
+  <div class="feature-container">
+    <div class="fake-padding"></div>
+    <div class="feature" style="background-image: url(/static/img/line_pattern_04.png), url(/static/img/cover/earth.jpg);">
+      <div class="title-container">
+        <div class="title-subcontainer">
+      <div class="title">
+          Understand the opportunities in space exploration and the career potential it offers.
+      </div>
+    </div>
+      </div>
+    </div>
+    <nav class="arrow-pagedown-container"><a class="arrow-pagedown" href="#main"><img src="/static/img/buttons/arrow_down_white.svg"></a></nav>
+  </div>
+</div>
 
-		<div id="main" class="anchor"></div>
-		<div class="pure-u-1 list-header">
-			<h1>{% trans "Find by topic" %}</h1>
-			<div class="filters">
-				<div class="filter-topic-text"><a class="selected" href="/activities/">{% trans "all" %}</a></div>
-			</div>
-			{% include "filters.html"  with page_name_filter="careers:list_by_category" %}
-		</div>
+<div class="thumbnailed-list careers page2 snap pure-g smartembed">
 
-        <div class="career_menu horizontal-jump-menu padded">
-        	<ul class="list-4col">
-        		<li>
-        			<a href="#interviews_menu">
-	        			<p class="menu_title">{% trans "Interviews" %}</p>
-	        			<p>{% trans "What is it like to have a space-related job?" %}</p>
-	        			<span><img src="{% static 'img/down_circle_icon.svg' %}" alt=""></span>
-	        		</a>
-        		</li>
-        		<li>
-        			<a href="#careers_menu">
-	        			<p class="menu_title">{% trans "Careers" %}</p>
-	        			<p>{% trans "It is not all about becoming an astronaut!" %}</p>
-	        			<span><img src="{% static 'img/down_circle_icon.svg' %}" alt=""></span>
-	        		</a>
-        		</li>
-        		<li>
-        			<a href="#webinars_menu">
-	        			<p class="menu_title">{% trans "Webinars" %}</p>
-	        			<p>{% trans "Watch live talks about space sciences" %}</p>
-	        			<span><img src="{% static 'img/down_circle_icon.svg' %}" alt=""></span>
-	        		</a>
-        		</li>
-        		<li>
-        			<a href="#teaching_material_menu">
-	        			<p class="menu_title">{% trans "Teaching material" %}</p>
-	        			<p>{% trans "Find career activities for students, download and print material on space careers" %}</p>
-	        			<span><img src="{% static 'img/down_circle_icon.svg' %}" alt=""></span>
-	        		</a>
-        		</li>
-        	</ul>
-        	<div style="clear:both;"></div>
+    <div id="main" class="anchor"></div>
+
+        <div class="pure-u-1 list-header">
+        <h1>{% trans "Find by topic" %}</h1>
+        <div class="filters">
+            <div class="filter-topic-text"><a class="selected" href="/activities/">{% trans "all" %}</a></div>
         </div>
-   </div>
+        {% include "filters.html"  with page_name_filter="careers:list_by_category" %}
+    </div>
+
+    <div class="career_menu horizontal-jump-menu padded">
+        <ul class="list-4col">
+            <li>
+                <a href="#interviews_menu">
+                    <p class="menu_title">{% trans "Interviews" %}</p>
+                    <p>{% trans "What is it like to have a space-related job?" %}</p>
+                    <span><img src="{% static 'img/down_circle_icon.svg' %}" alt=""></span>
+                </a>
+            </li>
+            <li>
+                <a href="#careers_menu">
+                    <p class="menu_title">{% trans "Careers" %}</p>
+                    <p>{% trans "It is not all about becoming an astronaut!" %}</p>
+                    <span><img src="{% static 'img/down_circle_icon.svg' %}" alt=""></span>
+                </a>
+            </li>
+            <li>
+                <a href="#webinars_menu">
+                    <p class="menu_title">{% trans "Webinars" %}</p>
+                    <p>{% trans "Watch live talks about space sciences" %}</p>
+                    <span><img src="{% static 'img/down_circle_icon.svg' %}" alt=""></span>
+                </a>
+            </li>
+            <li>
+                <a href="#teaching_material_menu">
+                    <p class="menu_title">{% trans "Teaching material" %}</p>
+                    <p>{% trans "Find career activities for students, download and print material on space careers" %}</p>
+                    <span><img src="{% static 'img/down_circle_icon.svg' %}" alt=""></span>
+                </a>
+            </li>
+        </ul>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
 
 <div id="list" class="thumbnailed-list careers page2 snap pure-g">
+
+    {%  if booklet %}
+    <div id="booklet" class="wrapper_block_previews padded-h">
+        <h2 class="title">{{  booklet.title }}</h2>
+        <h3 class="title_green">{{ booklet.teaser }}</h3>
+        {% thumbnail booklet.main_visual "600" crop="noop" as im %}
+            <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" />
+        {% endthumbnail %}
+        <div class="download-booklet">
+            <form action="{% url 'careers:booklet-download' booklet.slug %}" method="post">
+                {% csrf_token %}
+                {% item_languages booklet LANGUAGE_CODE %}
+                <input id="left-search-submit" type="submit" value="{% trans "Download" %}" />
+            </form>
+        </div>
+        <div class="booklet-extra" id="booklet-extra">
+            <div class="close-button">
+                <a href="#booklet"><img src="/static/img/buttons/plus_button_develope.svg" width="25px" id="close-icon"
+                 onclick="$('#booklet-extra').toggle('slow');$('#sp-show-more').show();">
+                </a>
+            </div>
+            {{ booklet.story | safe }}
+        </div>
+
+        <div class="extra">
+            <a href="#booklet-extra" id="sp-show-more" onclick="$('#booklet-extra').toggle('slow');$(this).hide();"
+               class="call-to-action">{% trans "Show more" %}</a>
+        </div>
+    </div>
+    {%  endif %}
 
 <!-- Interviews -->
 	<div id="interviews_menu" class="wrapper_block_previews">

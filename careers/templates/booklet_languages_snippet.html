@@ -1,0 +1,5 @@
+<select name="item_language">
+{% for code, name in choices %}
+    <option value="{{ code }}" {% if actual_language == code %}selected{% endif %}>{{ name }}</option>
+{% endfor %}
+</select>

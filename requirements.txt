@@ -5,7 +5,7 @@
 
 Django==1.8.14
 pytz
-psycopg2==2.6.1  # postgreSQL
+psycopg2
 django-pipeline==1.6.8
 django-autoslug==1.9.3
 awesome-slugify==1.6.5
@@ -18,7 +18,7 @@ django-el-pagination==2.1.2
 
 pillow==3.2.0
 sorl-thumbnail==12.3
-WeasyPrint==0.28
+WeasyPrint
 html5lib==0.9999999  # the latest html5lib==0.999999999 install fails
 
 redis==2.10.5
@@ -26,9 +26,8 @@ celery==3.1.23
 Whoosh==2.7.4
 
 django-simplesearch==1.0
-
+unicodecsv
 ## astroedu
 bleach==1.4.2
-# django-celery==3.1.23
 mistune==0.7.2
 rtfunicode==1.0
