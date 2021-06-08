@@ -16,7 +16,7 @@ django-taggit-autosuggest==0.2.8
 django-select-multiple-field==0.4.2
 django-el-pagination==2.1.2
 
-pillow==3.2.0
+pillow==8.2.0
 sorl-thumbnail==12.3
 WeasyPrint
 html5lib==0.9999999  # the latest html5lib==0.999999999 install fails
