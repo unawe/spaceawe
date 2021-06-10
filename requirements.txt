@@ -3,7 +3,7 @@
 ## check outdated dependencies:
 #    pip list --outdated
 
-Django==1.8.14
+Django==2.2.24
 pytz
 psycopg2
 django-pipeline==1.6.8
